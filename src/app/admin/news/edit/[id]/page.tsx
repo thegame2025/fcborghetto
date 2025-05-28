@@ -10,7 +10,7 @@ import Link from 'next/link';
 interface NewsEditPageProps {
   params: {
     id: string;
-  };
+  }
 }
 
 export default function EditNewsPage({ params }: NewsEditPageProps) {

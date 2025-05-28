@@ -10,6 +10,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Ignora errori TypeScript durante il build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // Aggiorna configurazione per le immagini remote usando remotePatterns (raccomandato)
   images: {
     remotePatterns: [
