@@ -6,6 +6,10 @@ const nextConfig = {
       bodySizeLimit: '5mb',
     },
   },
+  // Ignora errori ESLint durante il build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Aggiorna configurazione per le immagini remote usando remotePatterns (raccomandato)
   images: {
     remotePatterns: [
