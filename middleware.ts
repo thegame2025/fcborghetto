@@ -1,8 +1,31 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export function middleware(request: NextRequest) {
-  // Continua normalmente senza modifiche
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Consenti sempre l'accesso a queste pagine senza autenticazione
+  if (pathname === '/admin/login' || pathname === '/admin/initialize' || pathname.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+
+  // Verifica l'autenticazione per le pagine admin
+  if (pathname.startsWith('/admin')) {
+    const session = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+
+    // Redirect alla pagina di login se non autenticato
+    if (!session) {
+      const url = new URL('/admin/login', request.url);
+      url.searchParams.set('callbackUrl', encodeURI(request.url));
+      return NextResponse.redirect(url);
+    }
+  }
+  
+  // Continua normalmente per tutte le altre route
   return NextResponse.next();
 }
 

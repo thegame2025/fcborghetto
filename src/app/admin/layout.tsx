@@ -53,8 +53,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Tema', href: '/admin/tema', icon: <FaPalette /> },
   ];
 
-  // Skip rendering if we're on the login page
-  if (pathname === '/admin/login') {
+  // Skip rendering if we're on the login page or initialize page
+  if (pathname === '/admin/login' || pathname === '/admin/initialize') {
     return children;
   }
 
