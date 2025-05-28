@@ -1,10 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { toast } from 'react-toastify';
+import NewsCard from '@/components/NewsCard';
 
 interface News {
   _id: string;
@@ -68,11 +66,6 @@ export default function NewsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const truncateContent = (content: string, maxLength: number = 150) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + '...';
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">News</h1>
@@ -89,29 +82,15 @@ export default function NewsPage() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {news.map((item) => (
-              <div key={item._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {item.image && (
-                  <div className="relative h-48 w-full">
-                    <Image 
-                      src={item.image} 
-                      alt={item.title} 
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-                  <p className="text-sm text-gray-500 mb-4">{formatDate(item.publishedAt)}</p>
-                  <p className="text-gray-700 mb-4">{truncateContent(item.content)}</p>
-                  <Link 
-                    href={`/news/${item._id}`}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    Leggi di più
-                  </Link>
-                </div>
-              </div>
+              <NewsCard
+                key={item._id}
+                id={item._id}
+                title={item.title}
+                content={item.content}
+                image={item.image}
+                publishedAt={item.publishedAt}
+                truncateLength={40}
+              />
             ))}
           </div>
           

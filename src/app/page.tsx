@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaCalendarAlt, FaNewspaper, FaVideo } from 'react-icons/fa';
 import { useSiteConfig } from '@/hooks/useSiteConfig';
+import NewsCard from '@/components/NewsCard';
 
 interface News {
   _id: string;
@@ -52,6 +53,9 @@ export default function HomePage() {
   useEffect(() => {
     // Rimossi log di debug per produzione
   }, [siteConfig]);
+
+  // Get the primary color from siteConfig or use a default
+  const primaryColor = siteConfig?.primaryColor || '#1f2937';
 
   if (isLoading) {
     return (
@@ -110,36 +114,15 @@ export default function HomePage() {
           ) : latestNews.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {latestNews.map((news) => (
-                <Link href={`/news/${news._id}`} key={news._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative h-48 w-full">
-                    {news.image ? (
-                      <Image 
-                        src={news.image} 
-                        alt={news.title} 
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <FaNewspaper className="text-gray-400 text-4xl" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center text-sm text-gray-500 mb-2">
-                      <FaCalendarAlt className="mr-2" />
-                      {new Date(news.publishedAt).toLocaleDateString('it-IT', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      })}
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-800">{news.title}</h3>
-                    <p className="text-gray-600 line-clamp-3">
-                      {news.content.replace(/<[^>]*>/g, '')}
-                    </p>
-                  </div>
-                </Link>
+                <NewsCard
+                  key={news._id}
+                  id={news._id}
+                  title={news.title}
+                  content={news.content}
+                  image={news.image}
+                  publishedAt={news.publishedAt}
+                  truncateLength={40}
+                />
               ))}
             </div>
           ) : (
@@ -151,7 +134,7 @@ export default function HomePage() {
       </section>
 
       {/* Live Stream Section */}
-      <section className="py-16 px-4 bg-gray-800 text-white">
+      <section className="py-16 px-4 text-white" style={{ backgroundColor: primaryColor }}>
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold mb-4">Segui le nostre partite in diretta</h2>

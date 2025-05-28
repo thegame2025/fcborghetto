@@ -10,6 +10,13 @@ interface Stats {
   playersCount: number;
 }
 
+interface Season {
+  _id: string;
+  name: string;
+  year: string;
+  players?: Array<{ _id: string; name: string; }>;
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,15 +24,38 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // In un'implementazione reale, qui faresti una chiamata API per ottenere le statistiche
-        // Per ora impostiamo dei valori di esempio
+        setIsLoading(true);
+        
+        // Fetch news count
+        const newsResponse = await fetch('/api/news/count');
+        const newsData = await newsResponse.json();
+        
+        // Fetch seasons count
+        const seasonsResponse = await fetch('/api/seasons/count');
+        const seasonsData = await seasonsResponse.json();
+        
+        // We'll create a new API endpoint to get player counts or calculate it here
+        let playersCount = 0;
+        if (seasonsData.success && Array.isArray(seasonsData.seasons)) {
+          // If we have the full seasons data, we can calculate player count
+          playersCount = seasonsData.seasons.reduce((acc: number, season: Season) => {
+            return acc + (season.players ? season.players.length : 0);
+          }, 0);
+        }
+        
         setStats({
-          newsCount: 5,
-          seasonsCount: 3,
-          playersCount: 25,
+          newsCount: newsData.count || 0,
+          seasonsCount: seasonsData.count || 0,
+          playersCount: playersCount,
         });
       } catch (error) {
         console.error('Errore durante il recupero delle statistiche:', error);
+        // Fallback to 0 if there's an error
+        setStats({
+          newsCount: 0,
+          seasonsCount: 0,
+          playersCount: 0,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -36,46 +66,46 @@ export default function AdminDashboard() {
 
   const dashboardItems = [
     {
+      title: 'Homepage',
+      description: 'Impostazioni generali del sito e della home',
+      icon: <FaCog size={24} />,
+      href: '/admin/configurazione',
+      color: 'bg-blue-500',
+    },
+    {
       title: 'Gestisci News',
       description: 'Crea, modifica ed elimina le notizie del sito',
       icon: <FaNewspaper size={24} />,
       href: '/admin/news',
-      color: 'bg-blue-500',
+      color: 'bg-green-500',
     },
     {
       title: 'Gestisci Annate',
       description: 'Gestisci le annate calcistiche e i giocatori',
       icon: <FaUsers size={24} />,
       href: '/admin/annate',
-      color: 'bg-green-500',
+      color: 'bg-red-500',
     },
     {
       title: 'Streaming Live',
       description: 'Configura lo streaming live delle partite',
       icon: <FaVideo size={24} />,
       href: '/admin/live',
-      color: 'bg-red-500',
+      color: 'bg-purple-500',
     },
     {
       title: 'Contatti',
       description: 'Modifica le informazioni di contatto e la mappa',
       icon: <FaEnvelope size={24} />,
       href: '/admin/contatti',
-      color: 'bg-purple-500',
+      color: 'bg-yellow-500',
     },
     {
-      title: 'Configurazione',
-      description: 'Impostazioni generali del sito',
-      icon: <FaCog size={24} />,
-      href: '/admin/configurazione',
-      color: 'bg-gray-500',
-    },
-    {
-      title: 'Modifica Home',
-      description: 'Personalizza la pagina principale del sito',
+      title: 'Modifica Tema',
+      description: 'Personalizza i colori e l\'aspetto del sito',
       icon: <FaEdit size={24} />,
       href: '/admin/tema',
-      color: 'bg-yellow-500',
+      color: 'bg-gray-500',
     },
   ];
 

@@ -45,11 +45,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: <FaHome /> },
+    { name: 'Homepage', href: '/admin/configurazione', icon: <FaCog /> },
     { name: 'News', href: '/admin/news', icon: <FaNewspaper /> },
     { name: 'Annate', href: '/admin/annate', icon: <FaUsers /> },
     { name: 'Live', href: '/admin/live', icon: <FaVideo /> },
     { name: 'Contatti', href: '/admin/contatti', icon: <FaEnvelope /> },
-    { name: 'Configurazione', href: '/admin/configurazione', icon: <FaCog /> },
     { name: 'Tema', href: '/admin/tema', icon: <FaPalette /> },
   ];
 
