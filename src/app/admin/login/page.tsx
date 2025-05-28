@@ -47,7 +47,11 @@ function LoginForm() {
       }
 
       toast.success('Login effettuato con successo!');
-      router.push(callbackUrl);
+      
+      // Usa un reindirizzamento diretto invece di router.push
+      setTimeout(() => {
+        window.location.href = callbackUrl;
+      }, 500);
     } catch (error) {
       console.error('Errore durante il login:', error);
       toast.error('Si è verificato un errore durante il login.');
